@@ -1,24 +1,36 @@
 using UnityEngine;
+using Alteruna;
 
-public class EnemyBehavior : MonoBehaviour
+public class EnemyBehavior : AttributesSync
 {
-    public int health = 1; // Kesehatan enemy, bisa diatur sesuai keinginan
+    public Transform target;
+    public float moveSpeed = 5f;
+    public int damage = 1;
 
-    void OnCollisionEnter2D(Collision2D collision)
+    void Update()
     {
-        // Jika enemy terkena peluru
-        if (collision.gameObject.CompareTag("Bullet"))
+        if (target != null)
         {
-            // Kurangi kesehatan
-            health--;
+            Vector3 direction = (target.position - transform.position).normalized;
+            SyncEnemyMovement(direction);
+        }
+    }
 
-            // Hancurkan peluru setelah bertabrakan
-            Destroy(collision.gameObject);
+    [SynchronizableMethod]
+    void SyncEnemyMovement(Vector3 direction)
+    {
+        // Synchronize the enemy movement across all players
+        transform.position += direction * moveSpeed * Time.deltaTime;
+    }
 
-            // Jika kesehatan mencapai 0, hancurkan enemy
-            if (health <= 0)
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Player"))
+        {
+            var playerHealth = collision.collider.GetComponent<PlayerHealth>();
+            if (playerHealth != null)
             {
-                Destroy(gameObject);
+                playerHealth.TakeDamage(damage);
             }
         }
     }

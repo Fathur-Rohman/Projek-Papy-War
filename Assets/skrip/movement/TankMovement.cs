@@ -11,7 +11,7 @@ public class TankMovement : MonoBehaviour
     {
         _avatar = GetComponent<Alteruna.Avatar>();
 
-        if  (_avatar.IsMe)
+        if  (!_avatar.IsMe)
             return;
         // Memastikan Rigidbody2D diambil dari objek tank
         rb = GetComponent<Rigidbody2D>();
@@ -19,8 +19,9 @@ public class TankMovement : MonoBehaviour
 
     void Update()
     {
-        if  (_avatar.IsMe)
+        if  (!_avatar.IsMe)
             return;
+
         // Ambil input dari keyboard untuk pergerakan
         float moveDirection = Input.GetAxis("Vertical");  // W dan S untuk maju/mundur
         float rotateDirection = Input.GetAxis("Horizontal");  // A dan D untuk rotasi kiri/kanan

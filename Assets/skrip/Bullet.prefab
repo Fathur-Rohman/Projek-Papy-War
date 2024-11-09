@@ -161,3 +161,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b815f41d756e6d844abc1f0b6d84060a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Multiplayer: {fileID: 0}
+  _uidString: 6d44ffac-631a-49cb-80e4-5afb4eb503ca
+  Reliability: 1
+  LocalMethodBehavior: 1
+  speed: 20
+  damage: 1

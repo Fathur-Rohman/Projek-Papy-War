@@ -1,52 +1,41 @@
-using System.Collections;
 using UnityEngine;
+using Alteruna;
 
-public class TankShooting : MonoBehaviour
+public class TankShooting : AttributesSync
 {
-    public GameObject bulletPrefab;   // Prefab untuk peluru
-    public Transform firePoint;       // Titik tembak peluru
-    public float bulletSpeed = 20f;   // Kecepatan peluru
-    public float shootCooldown = 2f;  // Waktu cooldown antara set peluru
-    public int shotsPerCooldown = 2;  // Jumlah peluru per setiap cooldown
+    public GameObject bulletPrefab;   // Reference to bullet prefab
+    public Transform shootPoint;      // Spawn point for the bullet
+    public float bulletSpeed = 20f;
+    public float shootCooldown = 0.5f;
+    private float lastShootTime;
 
-    private int shotsRemaining;       // Sisa peluru yang bisa ditembakkan dalam cooldown
-    private bool canShoot = true;     // Menentukan apakah tank bisa menembak atau tidak
+    private Alteruna.Avatar avatar;
 
     void Start()
     {
-        shotsRemaining = shotsPerCooldown; // Set jumlah peluru awal
+        avatar = GetComponent<Alteruna.Avatar>();
     }
 
     void Update()
     {
-        // Deteksi input spasi untuk menembak
-        if (Input.GetKeyDown(KeyCode.Space) && canShoot && shotsRemaining > 0)
+        if (avatar.IsMe && Input.GetKeyDown(KeyCode.Space) && Time.time > lastShootTime + shootCooldown)
         {
+            lastShootTime = Time.time;
             Shoot();
-            shotsRemaining--;  // Kurangi jumlah peluru yang tersisa
-            if (shotsRemaining == 0)
-            {
-                StartCoroutine(ResetShootCooldown()); // Mulai cooldown setelah batas peluru habis
-            }
         }
     }
 
     void Shoot()
     {
-        // Buat peluru dan beri kecepatan
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-        rb.velocity = firePoint.up * bulletSpeed;
-
-        // Hancurkan peluru setelah 3 detik
-        Destroy(bullet, 3f);
+        SyncShoot(shootPoint.position, shootPoint.up * bulletSpeed);
     }
 
-    IEnumerator ResetShootCooldown()
+    [SynchronizableMethod]
+    void SyncShoot(Vector3 position, Vector3 velocity)
     {
-        canShoot = false;           // Nonaktifkan kemampuan menembak
-        yield return new WaitForSeconds(shootCooldown); // Tunggu waktu cooldown
-        shotsRemaining = shotsPerCooldown; // Reset jumlah peluru per cooldown
-        canShoot = true;            // Aktifkan kembali kemampuan menembak
+        GameObject bullet = Instantiate(bulletPrefab, position, Quaternion.identity);
+        Bullet bulletScript = bullet.GetComponent<Bullet>();
+        bulletScript.Initialize(velocity);  // Set synchronized direction
+        Destroy(bullet, 3f);
     }
 }
