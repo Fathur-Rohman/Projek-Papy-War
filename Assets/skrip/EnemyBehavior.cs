@@ -36,8 +36,13 @@ public class EnemyBehavior : AttributesSync
     }
 
     [SynchronizableMethod]
-    void Kill()
+    public void Kill()
     {
         Destroy(gameObject);
+    }
+
+    public void SyncKill()
+    {
+        BroadcastRemoteMethod("Kill");
     }
 }

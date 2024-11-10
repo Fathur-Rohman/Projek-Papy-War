@@ -44,6 +44,7 @@ public class TankShooting : AttributesSync
     [SynchronizableMethod]   // Alteruna's attribute to sync across clients
     void SynchronizeShoot()
     {
+        Debug.Log("SynchronizeShoot");
         // Instantiate the bullet across all clients
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();

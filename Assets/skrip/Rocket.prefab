@@ -171,6 +171,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6cafc2b1ef99c8499ff0b7f33374209, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Multiplayer: {fileID: 0}
+  _uidString: 11526763-8a7f-4693-b032-62f94825f072
+  Reliability: 1
+  LocalMethodBehavior: 1
   speed: 20
   rotateSpeed: 200
   explosionPrefab: {fileID: 3888593821838803403, guid: cc5c479d0f44e0d40a3facf8da37547e, type: 3}
+  target: {fileID: 0}
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  _avatar: {fileID: -7194222158285093449, guid: d7b5c950c46e4f5488878e02b951deda, type: 3}
+  rocketPowerUp: {fileID: 1890264269693813739, guid: 0256bc9535983ef4f83422bd75de7629, type: 3}

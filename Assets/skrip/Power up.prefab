@@ -116,7 +116,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -171,5 +171,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 174e4fd5c6ee4f643bee7cf3a8f9fe89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Multiplayer: {fileID: 0}
+  _uidString: e5fcb18a-eaed-4c90-bc8f-0926e3dff11c
+  Reliability: 1
+  LocalMethodBehavior: 1
   rocketPrefab: {fileID: 2860794015621580841, guid: 85ed29aac23e96d45adb982eb220d8f3, type: 3}
   powerUpDuration: 10
