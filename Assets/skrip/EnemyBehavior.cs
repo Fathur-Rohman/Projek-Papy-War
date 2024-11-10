@@ -3,35 +3,41 @@ using Alteruna;
 
 public class EnemyBehavior : AttributesSync
 {
-    public Transform target;
-    public float moveSpeed = 5f;
-    public int damage = 1;
+    [SynchronizableField] public int health = 1; // Kesehatan enemy, bisa diatur sesuai keinginan
+    private Alteruna.Avatar _avatar;
 
-    void Update()
+    void Start()
     {
-        if (target != null)
+        _avatar = GetComponent<Alteruna.Avatar>();
+
+        if (!_avatar.IsMe)
+            return;
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (_avatar.IsMe)
+            return;
+        // Jika enemy terkena peluru
+        if (collision.gameObject.CompareTag("Bullet"))
         {
-            Vector3 direction = (target.position - transform.position).normalized;
-            SyncEnemyMovement(direction);
+            // Kurangi kesehatan
+            health--;
+
+            // Hancurkan peluru setelah bertabrakan
+            Destroy(collision.gameObject);
+
+            // Jika kesehatan mencapai 0, hancurkan enemy
+            if (health <= 0)
+            {
+                BroadcastRemoteMethod("Kill");
+            }
         }
     }
 
     [SynchronizableMethod]
-    void SyncEnemyMovement(Vector3 direction)
+    void Kill()
     {
-        // Synchronize the enemy movement across all players
-        transform.position += direction * moveSpeed * Time.deltaTime;
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.collider.CompareTag("Player"))
-        {
-            var playerHealth = collision.collider.GetComponent<PlayerHealth>();
-            if (playerHealth != null)
-            {
-                playerHealth.TakeDamage(damage);
-            }
-        }
+        Destroy(gameObject);
     }
 }

@@ -137,7 +137,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -165,5 +165,4 @@ MonoBehaviour:
   _uidString: 6d44ffac-631a-49cb-80e4-5afb4eb503ca
   Reliability: 1
   LocalMethodBehavior: 1
-  speed: 20
-  damage: 1
+  _avatar: {fileID: -7194222158285093449, guid: d7b5c950c46e4f5488878e02b951deda, type: 3}

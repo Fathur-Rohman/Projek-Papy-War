@@ -3,37 +3,24 @@ using Alteruna;
 
 public class Bullet : AttributesSync
 {
-    public float speed = 20f;
-    public int damage = 1;
-    private Vector3 velocity;
+    [SerializeField] private Alteruna.Avatar _avatar;
 
-    public void Initialize(Vector3 initialVelocity)
+    void Start()
     {
-        velocity = initialVelocity;
-        SyncDirection(velocity);  // Sync the bullet's velocity across clients
+        if (_avatar != null && !_avatar.IsMe)
+            return;
+
+        Destroy(gameObject, 5f);
     }
 
     [SynchronizableMethod]
-    public void SyncDirection(Vector3 syncVelocity)
-    {
-        velocity = syncVelocity;
-    }
-
-    void Update()
-    {
-        transform.position += velocity * Time.deltaTime;
-    }
-
     void OnCollisionEnter2D(Collision2D collision)
     {
+        if (_avatar.IsMe)
+            return;
         if (collision.gameObject.CompareTag("Player"))
         {
-            PlayerHealth health = collision.collider.GetComponent<PlayerHealth>();
-            if (health != null)
-            {
-                health.TakeDamage(damage);
-            }
-            Destroy(gameObject);  // Destroy bullet after hit
+            Destroy(gameObject);
         }
     }
 }

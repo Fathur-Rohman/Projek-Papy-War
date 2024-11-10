@@ -1,41 +1,62 @@
+using System.Collections;
 using UnityEngine;
 using Alteruna;
 
 public class TankShooting : AttributesSync
 {
-    public GameObject bulletPrefab;   // Reference to bullet prefab
-    public Transform shootPoint;      // Spawn point for the bullet
+    public GameObject bulletPrefab;
+    public Transform firePoint;
     public float bulletSpeed = 20f;
-    public float shootCooldown = 0.5f;
-    private float lastShootTime;
+    public float shootCooldown = 2f;
+    public int shotsPerCooldown = 2;
 
-    private Alteruna.Avatar avatar;
+    private int shotsRemaining;
+    private bool canShoot = true;
+    private Alteruna.Avatar _avatar;
+
+    [SerializeField] private LayerMask playerLayer;
+    [SerializeField] private int playerSelfLayer;
 
     void Start()
     {
-        avatar = GetComponent<Alteruna.Avatar>();
+        _avatar = GetComponent<Alteruna.Avatar>();
+        if (_avatar.IsMe)
+            _avatar.gameObject.layer = playerSelfLayer;
+        shotsRemaining = shotsPerCooldown;
     }
 
     void Update()
     {
-        if (avatar.IsMe && Input.GetKeyDown(KeyCode.Space) && Time.time > lastShootTime + shootCooldown)
+        if (!_avatar.IsMe)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.Space) && canShoot && shotsRemaining > 0)
         {
-            lastShootTime = Time.time;
-            Shoot();
+            BroadcastRemoteMethod("SynchronizeShoot");  // Directly call the synchronized method
+            shotsRemaining--;
+            if (shotsRemaining == 0)
+            {
+                StartCoroutine(ResetShootCooldown());
+            }
         }
     }
 
-    void Shoot()
+    [SynchronizableMethod]   // Alteruna's attribute to sync across clients
+    void SynchronizeShoot()
     {
-        SyncShoot(shootPoint.position, shootPoint.up * bulletSpeed);
+        // Instantiate the bullet across all clients
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+        rb.velocity = firePoint.up * bulletSpeed;
+
+        Destroy(bullet, 3f);  // Destroy bullet after some time
     }
 
-    [SynchronizableMethod]
-    void SyncShoot(Vector3 position, Vector3 velocity)
+    IEnumerator ResetShootCooldown()
     {
-        GameObject bullet = Instantiate(bulletPrefab, position, Quaternion.identity);
-        Bullet bulletScript = bullet.GetComponent<Bullet>();
-        bulletScript.Initialize(velocity);  // Set synchronized direction
-        Destroy(bullet, 3f);
+        canShoot = false;
+        yield return new WaitForSeconds(shootCooldown);
+        shotsRemaining = shotsPerCooldown;
+        canShoot = true;
     }
 }

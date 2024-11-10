@@ -17,8 +17,7 @@ GameObject:
   - component: {fileID: 2247703948991130691}
   - component: {fileID: -7194222158285093449}
   - component: {fileID: -1514735176512267027}
-  - component: {fileID: -9143083942154954267}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Tank
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -195,11 +194,16 @@ MonoBehaviour:
   Multiplayer: {fileID: 0}
   _uidString: 346f0cb9-09be-4083-a221-0b7f75206c1e
   Reliability: 1
-  LocalMethodBehavior: 1
+  LocalMethodBehavior: 2
   bulletPrefab: {fileID: 5357624710728033087, guid: 5d6908adaa22dc7418d0358d188102a0, type: 3}
-  shootPoint: {fileID: 4597531489233778807}
+  firePoint: {fileID: 4597531489233778807}
   bulletSpeed: 20
   shootCooldown: 2
+  shotsPerCooldown: 2
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  playerSelfLayer: 7
 --- !u!114 &2247703948991130691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,9 +220,7 @@ MonoBehaviour:
   _uidString: 55c589af-a3e4-4cf9-a79f-266f0e93d790
   Reliability: 1
   LocalMethodBehavior: 1
-  target: {fileID: 0}
-  moveSpeed: 5
-  damage: 1
+  health: 1
 --- !u!114 &-7194222158285093449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,23 +277,6 @@ MonoBehaviour:
   OnlySyncFromRoomOwner: 0
   refreshRate: 30
   SyncedAxes: 203
---- !u!114 &-9143083942154954267
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 12042316695852416}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fccf8b77ea23a2e40aa39231dbfb1e76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Multiplayer: {fileID: 0}
-  _uidString: 8ab12b2a-3eec-432a-ac11-32fb9b0503ab
-  Reliability: 2
-  LocalMethodBehavior: 1
-  maxHealth: 3
 --- !u!1 &153841019537561396
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,7 +287,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4597531489233778807}
   - component: {fileID: 5596805261902492685}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
