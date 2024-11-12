@@ -11,7 +11,7 @@ public class TankShield : MonoBehaviour
         {
             shieldActive = true;
             currentShieldEffect = Instantiate(shieldEffectPrefab, transform.position, Quaternion.identity);
-            currentShieldEffect.transform.parent = transform; // Agar efek mengikuti tank
+            currentShieldEffect.transform.parent = transform;
             Invoke("DeactivateShield", duration);
         }
     }
@@ -29,8 +29,7 @@ public class TankShield : MonoBehaviour
     {
         if (shieldActive && collision.gameObject.CompareTag("EnemyBullet"))
         {
-            // Tabrakan dengan peluru musuh tidak menyebabkan kerusakan saat perisai aktif
-            Destroy(collision.gameObject); // Hancurkan peluru musuh
+            Destroy(collision.gameObject);
         }
     }
 }

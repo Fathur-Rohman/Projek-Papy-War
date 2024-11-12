@@ -32,7 +32,7 @@ public class TankShooting : AttributesSync
 
         if (Input.GetKeyDown(KeyCode.Space) && canShoot && shotsRemaining > 0)
         {
-            BroadcastRemoteMethod("SynchronizeShoot");  // Directly call the synchronized method
+            BroadcastRemoteMethod("SynchronizeShoot");
             shotsRemaining--;
             if (shotsRemaining == 0)
             {
@@ -41,16 +41,15 @@ public class TankShooting : AttributesSync
         }
     }
 
-    [SynchronizableMethod]   // Alteruna's attribute to sync across clients
+    [SynchronizableMethod]
     void SynchronizeShoot()
     {
         Debug.Log("SynchronizeShoot");
-        // Instantiate the bullet across all clients
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         rb.velocity = firePoint.up * bulletSpeed;
 
-        Destroy(bullet, 3f);  // Destroy bullet after some time
+        Destroy(bullet, 3f);
     }
 
     IEnumerator ResetShootCooldown()

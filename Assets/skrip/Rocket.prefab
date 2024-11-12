@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 8831324308705947358}
   - component: {fileID: 2850817998970000966}
   - component: {fileID: 2322778663225108068}
-  - component: {fileID: 2255147131085194839}
+  - component: {fileID: 7402475741879686992}
   - component: {fileID: -4561569429874591088}
+  - component: {fileID: 7716507935578806895}
   m_Layer: 0
   m_Name: Rocket
   m_TagString: Untagged
@@ -30,8 +31,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 5.62947, y: -2.3263154, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.06, y: 0.06, z: 0.06}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -76,7 +77,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fd0a070c9ff5b7d4a9a12ee6a3c1fdfb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -114,8 +115,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!61 &2255147131085194839
-BoxCollider2D:
+--- !u!58 &7402475741879686992
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -146,19 +147,9 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
+  m_Offset: {x: 0, y: 0.07677746}
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_Radius: 1.5400887
 --- !u!114 &-4561569429874591088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,5 +173,24 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
-  _avatar: {fileID: -7194222158285093449, guid: d7b5c950c46e4f5488878e02b951deda, type: 3}
-  rocketPowerUp: {fileID: 1890264269693813739, guid: 0256bc9535983ef4f83422bd75de7629, type: 3}
+--- !u!114 &7716507935578806895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2860794015621580841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bff4f5a8991d7fa47baed5c5ff25979f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: 44c0a98045e51e54db998366c5208a35, type: 2}
+  duration: 1
+  corner: 1
+  loop: 0
+  points:
+  - {x: -1.342714, y: 0.041730344, z: 0}
+  - {x: 1.2881876, y: 0.041730344, z: 0}
+  - {x: 0.005666224, y: 1.4374152, z: 0}
+  - {x: -0.03606456, y: -1.2616577, z: 0}

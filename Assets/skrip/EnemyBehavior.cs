@@ -3,8 +3,9 @@ using Alteruna;
 
 public class EnemyBehavior : AttributesSync
 {
-    [SynchronizableField] public int health = 1; // Kesehatan enemy, bisa diatur sesuai keinginan
+    [SynchronizableField] public int health = 5;
     private Alteruna.Avatar _avatar;
+    public ParticleSystem particleSystemPrefab;
 
     void Start()
     {
@@ -18,16 +19,12 @@ public class EnemyBehavior : AttributesSync
     {
         if (_avatar.IsMe)
             return;
-        // Jika enemy terkena peluru
         if (collision.gameObject.CompareTag("Bullet"))
         {
-            // Kurangi kesehatan
             health--;
 
-            // Hancurkan peluru setelah bertabrakan
             Destroy(collision.gameObject);
 
-            // Jika kesehatan mencapai 0, hancurkan enemy
             if (health <= 0)
             {
                 BroadcastRemoteMethod("Kill");
@@ -39,6 +36,8 @@ public class EnemyBehavior : AttributesSync
     public void Kill()
     {
         Destroy(gameObject);
+        Instantiate(particleSystemPrefab, transform.position, Quaternion.identity).Play();
+
     }
 
     public void SyncKill()

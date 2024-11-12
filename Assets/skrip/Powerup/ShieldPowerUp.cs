@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class ShieldPowerUp : MonoBehaviour
 {
-    public float shieldDuration = 5f; // Durasi perisai aktif
-    public GameObject shieldEffect; // Prefab efek visual perisai
+    public float shieldDuration = 5f;
+    public GameObject shieldEffect;
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -15,7 +15,6 @@ public class ShieldPowerUp : MonoBehaviour
                 tankShield.ActivateShield(shieldDuration, shieldEffect);
             }
 
-            // Hancurkan power-up setelah diambil
             Destroy(gameObject);
         }
     }

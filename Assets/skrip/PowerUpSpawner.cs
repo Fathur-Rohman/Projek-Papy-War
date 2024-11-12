@@ -4,29 +4,49 @@ using Alteruna;
 
 public class PowerUpSpawner : AttributesSync
 {
-    public GameObject[] powerUpPrefabs;    // Array of power-up prefabs to spawn
-    public float spawnInterval = 15f;      // Interval between spawns
-    public Transform spawnArea;            // Transform that defines the spawn area bounds
+    public GameObject[] powerUpPrefabs;
+    public float spawnInterval = 15f;
+    public GameObject spawnAreaObj;
+    public Collider2D spawnArea;
+
+    [SynchronizableField] private Vector2 spawnPosition;
 
     private void Start()
     {
-        if (IsServer()) // Only the server or host handles spawning
-        {
-            StartCoroutine(SpawnPowerUpRoutine());
-        }
+        BroadcastRemoteMethod("StartSpawnPowerUpRoutine");
+        spawnAreaObj = GameObject.Find("PowerUpSpawner");
+        spawnArea = spawnAreaObj.GetComponent<Collider2D>();
     }
 
     private IEnumerator SpawnPowerUpRoutine()
     {
+        yield return new WaitForSeconds(Random.Range(0, spawnInterval / 2));
+
         while (true)
         {
             yield return new WaitForSeconds(spawnInterval);
-            BroadcastRemoteMethod("SpawnRandomPowerUp"); // Call spawn method on all clients
+
+            // Check if a GameObject named "PowerUp" exists in the scene
+            if (GameObject.Find("PowerUp") == null)
+            {
+                Vector2 randomPosition = GetRandomPositionInArea();
+
+                spawnPosition = randomPosition;
+                BroadcastRemoteMethod("OnSpawnPositionChanged", spawnPosition);
+            }
         }
     }
 
     [SynchronizableMethod]
-    private void SpawnRandomPowerUp()
+    private void OnSpawnPositionChanged(Vector2 newPosition)
+    {
+        if (GameObject.Find("PowerUp") == null)
+        {
+            SpawnRandomPowerUp(newPosition);
+        }
+    }
+
+    private void SpawnRandomPowerUp(Vector2 spawnPosition)
     {
         if (powerUpPrefabs.Length == 0 || spawnArea == null)
         {
@@ -34,33 +54,30 @@ public class PowerUpSpawner : AttributesSync
             return;
         }
 
-        // Randomly select a power-up type
         GameObject selectedPowerUp = powerUpPrefabs[Random.Range(0, powerUpPrefabs.Length)];
-        
-        // Calculate a random position within the spawn area
-        Vector2 spawnPosition = GetRandomPositionInArea();
-
-        // Spawn the selected power-up at the chosen position
-        Instantiate(selectedPowerUp, spawnPosition, Quaternion.identity);
+        GameObject spawnedPowerUp = Instantiate(selectedPowerUp, spawnPosition, Quaternion.identity);
+        spawnedPowerUp.name = "PowerUp"; // Ensure the name matches for checking
     }
 
     private Vector2 GetRandomPositionInArea()
     {
-        // Get the boundaries of the spawn area
-        Vector2 areaMin = (Vector2)spawnArea.position - (Vector2)spawnArea.localScale / 2;
-        Vector2 areaMax = (Vector2)spawnArea.position + (Vector2)spawnArea.localScale / 2;
+        if (spawnArea == null)
+        {
+            Debug.LogError("Spawn area collider is not assigned.");
+            return Vector2.zero;
+        }
 
-        // Calculate a random position within the boundaries
-        float randomX = Random.Range(areaMin.x, areaMax.x);
-        float randomY = Random.Range(areaMin.y, areaMax.y);
+        Bounds bounds = spawnArea.bounds;
+
+        float randomX = Random.Range(bounds.min.x, bounds.max.x);
+        float randomY = Random.Range(bounds.min.y, bounds.max.y);
 
         return new Vector2(randomX, randomY);
     }
 
-    private bool IsServer()
+    [SynchronizableMethod]
+    private void StartSpawnPowerUpRoutine()
     {
-        // Check if this client is the server or host
-        Alteruna.Avatar avatar = GetComponent<Alteruna.Avatar>();
-        return avatar != null && avatar.IsMe;
+        StartCoroutine(SpawnPowerUpRoutine());
     }
 }
